@@ -7,7 +7,8 @@ public class BuildingSelector : MonoBehaviour
 
     private Controls _controls;
     private Camera _camera;
-    private Vector2 _mousePos, _Debugpoint;
+    private Vector2 _mousePos;
+    private Vector3 _Debugpoint;
 
     private void Awake()
     {
@@ -45,12 +46,11 @@ public class BuildingSelector : MonoBehaviour
 
     private void SendRay()
     {
-        Debug.Log(_mousePos);
         Ray ray = _camera.ScreenPointToRay(_mousePos);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100f))
+        if (Physics.Raycast(ray, out hit, 1000f))
         {
-            _Debugpoint = hit.point;
+            
         }
     }
 
@@ -65,9 +65,5 @@ public class BuildingSelector : MonoBehaviour
     {
        SendRay();
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(_camera.transform.position, _Debugpoint);
-    }
+    
 }
