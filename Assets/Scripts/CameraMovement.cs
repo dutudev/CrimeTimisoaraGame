@@ -13,10 +13,35 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] 
     private Vector2 lookSpeed;
 
+    public static CameraMovement instance { get; private set; }
+
     private Controls _controls;
     private Vector2 _moveAxis;
     private Vector2 _lookAxis;
     private bool _looking = false;
+    private bool _canMove = true;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
+    }
+
     private void OnEnable()
     {
         _controls = new Controls();
@@ -64,15 +89,17 @@ public class CameraMovement : MonoBehaviour
 
     private void Move()
     {
-        Vector2 camDirForward = new Vector2(pivot.transform.forward.x, pivot.transform.forward.z);
-        Vector2 camDirRight = new Vector2(pivot.transform.right.x, pivot.transform.right.z);
-        camDirForward.Normalize();
-        camDirRight.Normalize();
-        Vector2 direction = _moveAxis.y * camDirForward + _moveAxis.x * camDirRight;
-        direction.Normalize();
-        Vector3 finalVector = new Vector3(direction.x, 0f, direction.y) ;
-        pivot.transform.position += moveSpeed * Time.deltaTime * finalVector;
-        //add lerp for camera pos
+        if (_canMove)
+        {
+            Vector2 camDirForward = new Vector2(pivot.transform.forward.x, pivot.transform.forward.z);
+            Vector2 camDirRight = new Vector2(pivot.transform.right.x, pivot.transform.right.z);
+            camDirForward.Normalize();
+            camDirRight.Normalize();
+            Vector2 direction = _moveAxis.y * camDirForward + _moveAxis.x * camDirRight;
+            direction.Normalize();
+            Vector3 finalVector = new Vector3(direction.x, 0f, direction.y) ;
+            pivot.transform.position += moveSpeed * Time.deltaTime * finalVector;
+        }
         cameraObject.transform.position = Vector3.Lerp(cameraObject.transform.position, cameraPos.transform.position,
             Time.deltaTime * lerpSpeed);
     }
@@ -82,7 +109,7 @@ public class CameraMovement : MonoBehaviour
         cameraObject.transform.localRotation =
             Quaternion.LookRotation((pivot.transform.position - cameraObject.transform.position).normalized);
        
-        if (_looking)
+        if (_looking && _canMove)
         {
             
             Vector3 newRotation =
@@ -91,6 +118,15 @@ public class CameraMovement : MonoBehaviour
             pivot.transform.localRotation = Quaternion.Euler(Mathf.Clamp(newRotation.x, -15f, 9f), newRotation.y, 0f);
         }
         
+    }
+
+    public void ChangeMove(bool set)
+    {
+        _canMove = set;
+    }
+    public void SnapPosition(Vector2 pos)
+    {
+        pivot.transform.position = new Vector3(pos.x, pivot.transform.position.y, pos.y);
     }
     
     void LateUpdate()

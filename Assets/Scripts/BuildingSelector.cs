@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class BuildingSelector : MonoBehaviour
 {
-
+    [SerializeField] 
+    private LayerMask hoverableLayer, clickableLayer;
     private Controls _controls;
     private Camera _camera;
     private Vector2 _mousePos;
@@ -33,9 +35,14 @@ public class BuildingSelector : MonoBehaviour
     
     private void GetClick(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        if (ctx.performed && !CanvasManager.instance.IsCursorOnUI(_mousePos))
         {
-            
+            Ray ray = _camera.ScreenPointToRay(_mousePos);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000f, clickableLayer))
+            {
+                hit.collider.gameObject.GetComponent<BuildingInteractable>().OnClick();
+            } 
         }
     }
 
@@ -48,7 +55,7 @@ public class BuildingSelector : MonoBehaviour
     {
         Ray ray = _camera.ScreenPointToRay(_mousePos);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1000f))
+        if (Physics.Raycast(ray, out hit, 1000f, hoverableLayer))
         {
             
         }
