@@ -41,7 +41,24 @@ public class BuildingSelector : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000f, clickableLayer))
             {
-                hit.collider.gameObject.GetComponent<BuildingInteractable>().OnClick();
+                BuildingInteractable interactable = hit.collider.gameObject.GetComponent<BuildingInteractable>();
+                if (interactable.GetBuildingName() == GameManager.instance.GetCurrentLocationName())
+                {
+                    //check here tool and act on it
+                }
+                else
+                {
+                    if (GameManager.instance.LocationSelected())
+                    {
+                        //change location
+                        interactable.OnClick();
+                    }
+                    else
+                    {
+                        //this means we are in select building phase so select building
+                        interactable.ChangeBuilding();
+                    }
+                }
             } 
         }
     }

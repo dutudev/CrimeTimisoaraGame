@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CanvasManager : MonoBehaviour
@@ -8,10 +9,13 @@ public class CanvasManager : MonoBehaviour
     private List<RectTransform> rectNotClick = new List<RectTransform>();
     [SerializeField] 
     private GameObject warningObject, hintsPanel;
+    [SerializeField] 
+    private TMP_Text timerText, locationText;
     public static CanvasManager instance { get; private set; }
 
     private Action _warningConfirm;
     private bool _hintsShown = false;
+    private CanvasGroup _locationTextAlpha;
     private void Awake()
     {
         if (instance == null)
@@ -22,6 +26,12 @@ public class CanvasManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        _locationTextAlpha = locationText.gameObject.GetComponent<CanvasGroup>();
     }
 
 
@@ -102,11 +112,34 @@ public class CanvasManager : MonoBehaviour
         LeanTween.cancel(hintsPanel);
         LeanTween.moveLocalX(hintsPanel, 960, 0.5f).setEaseOutExpo();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public void UpdateTimer(int time)
     {
-        
+        timerText.text = (time / 60).ToString() + " : " + (time % 60).ToString("D2");
+        LeanTween.cancel(timerText.gameObject);
+        timerText.transform.localScale = 1.1f * Vector3.one;
+        LeanTween.scale(timerText.gameObject, Vector3.one, 0.3f).setEaseOutExpo();
     }
+    
+    public void UpdateTimerBig(int time)
+    {
+        timerText.text = (time / 60).ToString() + " : " + (time % 60).ToString("D2");
+        LeanTween.cancel(timerText.gameObject);
+        timerText.transform.localScale = 1.3f * Vector3.one;
+        LeanTween.scale(timerText.gameObject, Vector3.one, 0.5f).setEaseOutExpo();
+    }
+
+    public void UpdateLocation(string text)
+    {
+        LeanTween.cancel(locationText.gameObject);
+        locationText.text = text;
+        _locationTextAlpha.alpha = 0;
+        locationText.transform.localPosition = new Vector3(locationText.transform.localPosition.x, -600f,
+            locationText.transform.localPosition.z);
+        LeanTween.moveLocalX(locationText.gameObject, -477.8f, .8f).setEaseOutExpo();
+        LeanTween.alphaCanvas(_locationTextAlpha, 1f, .8f).setEaseOutExpo();
+    }
+    
 
     // Update is called once per frame
     void Update()

@@ -25,6 +25,11 @@ public class BuildingInteractable : MonoBehaviour
     {
         CameraMovement.instance.ChangeMove(false);
         CameraMovement.instance.SnapPosition(new Vector2(transform.position.x, transform.position.z));
-        
+        //GameManager.instance.DecreaseTimer(); CALCULATE HERE TIME between buildings
+    }
+
+    public string GetBuildingName()
+    {
+        return buildingInfo.buildingName;
     }
 }

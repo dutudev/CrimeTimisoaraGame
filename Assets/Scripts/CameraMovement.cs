@@ -128,6 +128,11 @@ public class CameraMovement : MonoBehaviour
     {
         pivot.transform.position = new Vector3(pos.x, pivot.transform.position.y, pos.y);
     }
+
+    public Vector3 GetCameraPos()
+    {
+        return cameraObject.transform.position;
+    }
     
     void LateUpdate()
     {
