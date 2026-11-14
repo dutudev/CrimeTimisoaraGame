@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,8 +10,19 @@ public class GameManager : MonoBehaviour
     
     private float _timer;
     private int _oldTimer;
+    private int _currentTool; // 0 - interogate, 1 - investigate, 2 - accuse
     private bool _timerToggle = false;
     private BuildingInfo _currentBuilding = null;
+    private Controls _controls;
+    
+    
+    
+    //murder mystery part
+    [SerializeField] 
+    private List<Character> characters = new List<Character>();
+    
+    private Character _killer;
+    
     public static GameManager instance { get; private set; }
 
     private void Awake()
@@ -22,6 +35,16 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        _controls = new Controls();
+        _controls.Enable();
+        _controls.Player.Next.performed += Next;
+        _controls.Player.Next.canceled += Next;
+        _controls.Player.Previous.performed += Previous;
+        _controls.Player.Previous.canceled += Previous;
     }
 
 
@@ -39,6 +62,7 @@ public class GameManager : MonoBehaviour
         _oldTimer = Mathf.FloorToInt(gameTime);
         _timerToggle = false;
         _currentBuilding = null;
+        CanvasManager.instance.UpdateLocation("Select Starting Location");
     }
     
 
@@ -62,8 +86,55 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Next(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            ChangeTool(1);
+        }
+    }
+
+    private void Previous(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            ChangeTool(-1);
+        }
+    }
+
+    private void ChangeTool(int changeIndex)
+    {
+        _currentTool += changeIndex;
+        if (_currentTool < 0)
+        {
+            _currentTool = 2;
+        }
+        _currentTool %= 3;
+        
+        CanvasManager.instance.ChangeTool(_currentTool);
+    }
+
+    public void ExitTool()
+    {
+        switch (_currentTool)
+        {
+            case 0:
+                break;
+            case 1:
+                CanvasManager.instance.HideInvestigate();
+                break;
+            case 2:
+                break;
+        }
+    }
+
     public string GetCurrentLocationName()
     {
+        if (_currentBuilding == null)
+        {
+            return "";
+        }
+
         return _currentBuilding.buildingName;
     }
 
@@ -82,7 +153,26 @@ public class GameManager : MonoBehaviour
 
     public void SetCurrentBuilding(BuildingInfo set)
     {
+        if (_currentBuilding == null)
+        {
+            _timerToggle = true;
+        }
         _currentBuilding = set;
+        CanvasManager.instance.UpdateLocation(_currentBuilding.buildingName);
+    }
+
+    public void UseTool()
+    {
+        switch (_currentTool)
+        {
+            case 0:
+                break;
+            case 1:
+                CanvasManager.instance.ShowInvestigate(_currentBuilding);
+                break;
+            case 2:
+                break;
+        }
     }
 }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -11,11 +12,29 @@ public class CanvasManager : MonoBehaviour
     private GameObject warningObject, hintsPanel;
     [SerializeField] 
     private TMP_Text timerText, locationText;
+    [SerializeField]
+    private CanvasGroup locationTextAlpha;
+
+    [Header("Toolbar")] 
+    [SerializeField]
+    private Image toolImage;
+    [SerializeField] 
+    private List<Sprite> toolImages = new List<Sprite>();
+    [SerializeField]
+    private TMP_Text toolTitle, toolDesc;
+    [SerializeField] 
+    private List<string> toolTitles, toolDescs;
+
+    [Header("Investigate")] 
+    [SerializeField]
+    private CanvasGroup investigateAlpha;
+    [SerializeField] 
+    private TMP_Text investigateTitle, investigateSmalldesc, investigateDesc;
     public static CanvasManager instance { get; private set; }
 
     private Action _warningConfirm;
     private bool _hintsShown = false;
-    private CanvasGroup _locationTextAlpha;
+    
     private void Awake()
     {
         if (instance == null)
@@ -31,7 +50,7 @@ public class CanvasManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _locationTextAlpha = locationText.gameObject.GetComponent<CanvasGroup>();
+        
     }
 
 
@@ -47,7 +66,7 @@ public class CanvasManager : MonoBehaviour
     {
         foreach (var recty in rectNotClick)
         {
-            if (RectTransformUtility.RectangleContainsScreenPoint(recty, mousePos, null) && recty.gameObject.activeSelf)
+            if (RectTransformUtility.RectangleContainsScreenPoint(recty, mousePos, null) && recty.gameObject.activeInHierarchy)
             {
                 return true;
             }
@@ -133,11 +152,41 @@ public class CanvasManager : MonoBehaviour
     {
         LeanTween.cancel(locationText.gameObject);
         locationText.text = text;
-        _locationTextAlpha.alpha = 0;
+        locationTextAlpha.alpha = 0;
         locationText.transform.localPosition = new Vector3(locationText.transform.localPosition.x, -600f,
             locationText.transform.localPosition.z);
-        LeanTween.moveLocalX(locationText.gameObject, -477.8f, .8f).setEaseOutExpo();
-        LeanTween.alphaCanvas(_locationTextAlpha, 1f, .8f).setEaseOutExpo();
+        LeanTween.moveLocalY(locationText.gameObject, -477.8f, .8f).setEaseOutExpo();
+        LeanTween.alphaCanvas(locationTextAlpha, 1f, .8f).setEaseOutExpo();
+    }
+
+    public void ChangeTool(int index)
+    {
+        LeanTween.cancel(toolImage.gameObject);
+        toolImage.sprite = toolImages[index];
+        toolTitle.text = toolTitles[index];
+        toolDesc.text = toolDescs[index];
+        toolImage.rectTransform.localScale = 1.1f * Vector3.one;
+        LeanTween.scale(toolImage.rectTransform, Vector3.one, .5f).setEaseOutExpo();
+    }
+
+    public void ShowInvestigate(BuildingInfo info)
+    {
+        investigateAlpha.gameObject.SetActive(true);
+        LeanTween.cancel(investigateAlpha.gameObject);
+        investigateAlpha.alpha = 0;
+        investigateTitle.text = info.buildingName;
+        investigateSmalldesc.text = info.buildingSmallDesc;
+        investigateDesc.text = info.buildingDesctription;
+        LeanTween.alphaCanvas(investigateAlpha, 1, 0.5f).setEaseOutExpo();
+    }
+
+    public void HideInvestigate()
+    {
+        LeanTween.cancel(investigateAlpha.gameObject);
+        LeanTween.alphaCanvas(investigateAlpha, 0, 0.5f).setEaseOutExpo().setOnComplete(() =>
+        {
+            investigateAlpha.gameObject.SetActive(false);
+        });
     }
     
 

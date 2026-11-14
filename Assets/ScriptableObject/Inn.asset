@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bfe4faa7d4f20a449a19a2843a9b241, type: 3}
+  m_Name: Inn
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingInfo
+  buildingName: '"La Trompetist" Inn'
+  buildingSmallDesc: Every traveler brings a story
+  buildingDesctription: "Travelers come here to eat, drink, sleep, and exchange news.
+    The inn\u2019s guests and staff include the innkeeper, cooks, servers, stable
+    workers, merchants, and travelers."

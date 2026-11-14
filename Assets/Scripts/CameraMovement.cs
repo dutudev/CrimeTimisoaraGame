@@ -9,7 +9,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private GameObject pivot, cameraPos, cameraObject;
     [SerializeField] 
-    private float moveSpeed, lerpSpeed;
+    private float moveSpeed, lerpSpeed, rotateSpeed;
     [SerializeField] 
     private Vector2 lookSpeed;
 
@@ -20,6 +20,7 @@ public class CameraMovement : MonoBehaviour
     private Vector2 _lookAxis;
     private bool _looking = false;
     private bool _canMove = true;
+    private bool _rotate = false;
 
     private void Awake()
     {
@@ -52,6 +53,8 @@ public class CameraMovement : MonoBehaviour
         _controls.Player.Look.canceled += GetLook;
         _controls.Player.Pan.performed += GetLooking;
         _controls.Player.Pan.canceled += GetLooking;
+        _controls.Player.Exit.performed += GetExit;
+        _controls.Player.Exit.canceled += GetExit;
         //add controls here
     }
 
@@ -63,6 +66,8 @@ public class CameraMovement : MonoBehaviour
         _controls.Player.Look.canceled -= GetLook;
         _controls.Player.Pan.performed -= GetLooking;
         _controls.Player.Pan.canceled -= GetLooking;
+        _controls.Player.Exit.performed -= GetExit;
+        _controls.Player.Exit.canceled -= GetExit;
         _controls.Disable();
     }
 
@@ -84,6 +89,16 @@ public class CameraMovement : MonoBehaviour
         }else if (ctx.canceled)
         {
             _looking = false;
+        }
+    }
+
+    private void GetExit(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            SetRotate(false);
+            ChangeMove(true);
+            GameManager.instance.ExitTool();
         }
     }
 
@@ -117,6 +132,11 @@ public class CameraMovement : MonoBehaviour
                     pivot.transform.rotation.eulerAngles.y + _lookAxis.x * Time.deltaTime * lookSpeed.x, 0f);
             pivot.transform.localRotation = Quaternion.Euler(Mathf.Clamp(newRotation.x, -15f, 9f), newRotation.y, 0f);
         }
+
+        if (!_canMove && _rotate)
+        {
+            pivot.transform.localRotation = Quaternion.Euler(6f, pivot.transform.rotation.eulerAngles.y + rotateSpeed * Time.deltaTime , 0f);
+        }
         
     }
 
@@ -127,6 +147,12 @@ public class CameraMovement : MonoBehaviour
     public void SnapPosition(Vector2 pos)
     {
         pivot.transform.position = new Vector3(pos.x, pivot.transform.position.y, pos.y);
+        
+    }
+
+    public void SetRotate(bool set)
+    {
+        _rotate = set;
     }
 
     public Vector3 GetCameraPos()

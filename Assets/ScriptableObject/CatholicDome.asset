@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: CatholicDome
   m_EditorClassIdentifier: Assembly-CSharp::BuildingInfo
   buildingName: Catholic Dome
+  buildingSmallDesc: A place for faith and music
+  buildingDesctription: "People come here for church services, prayers, weddings,
+    and funerals. The cathedral\u2019s visitors include priests, church attendants,
+    choir members, and worshippers."

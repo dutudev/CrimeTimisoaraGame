@@ -45,6 +45,8 @@ public class BuildingSelector : MonoBehaviour
                 if (interactable.GetBuildingName() == GameManager.instance.GetCurrentLocationName())
                 {
                     //check here tool and act on it
+                    interactable.SnapToBuilding();
+                    GameManager.instance.UseTool();
                 }
                 else
                 {
@@ -57,8 +59,11 @@ public class BuildingSelector : MonoBehaviour
                     {
                         //this means we are in select building phase so select building
                         interactable.ChangeBuilding();
+                        GameManager.instance.UseTool();
                     }
                 }
+
+                
             } 
         }
     }
