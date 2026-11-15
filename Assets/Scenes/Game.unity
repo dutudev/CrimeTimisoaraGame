@@ -1443,9 +1443,9 @@ MonoBehaviour:
   locationTextAlpha: {fileID: 424395194}
   toolImage: {fileID: 748510851}
   toolImages:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: df8f7d8fc380baf42944db125414e999, type: 3}
+  - {fileID: 21300000, guid: 3c3f9b690a87dbc4aa118b69450a5214, type: 3}
+  - {fileID: 21300000, guid: db14be9ff0a43e944b25724912ae164f, type: 3}
   toolTitle: {fileID: 676049218}
   toolDesc: {fileID: 1867160432}
   toolTitles:

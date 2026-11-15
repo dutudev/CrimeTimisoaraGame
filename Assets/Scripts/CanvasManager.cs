@@ -244,6 +244,7 @@ public class CanvasManager : MonoBehaviour
         }
         else
         {
+            EndInterogate();
             LeanTween.cancel(interogateAlpha.gameObject);
             LeanTween.alphaCanvas(interogateAlpha, 0, 0.5f).setEaseOutExpo().setOnComplete(() =>
             {
