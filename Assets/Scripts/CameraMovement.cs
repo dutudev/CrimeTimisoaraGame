@@ -101,7 +101,7 @@ public class CameraMovement : MonoBehaviour
                 SetRotate(false);
                 ChangeMove(true);  
             }
-            GameManager.instance.ExitTool();
+            GameManager.instance.ExitTool(false);
         }
     }
 

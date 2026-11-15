@@ -18,5 +18,5 @@ MonoBehaviour:
   - dark hair
   - prominent eyebrows
   - dimple
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: 490b94c64b5b84248ad7b9c1c58b75b8, type: 3}
   located: {fileID: 11400000, guid: dbbfa6f200e616141949eb7250f396c6, type: 2}

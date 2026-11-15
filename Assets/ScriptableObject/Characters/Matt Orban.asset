@@ -18,5 +18,5 @@ MonoBehaviour:
   - dark hair
   - moustache
   - scar on cheek
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: eb5344af363b7cd45b9a10f0e8a40880, type: 3}
   located: {fileID: 11400000, guid: 9ed11d506ed19a6439479fb8124e75af, type: 2}

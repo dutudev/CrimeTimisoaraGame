@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -75,68 +76,103 @@ public class GameManager : MonoBehaviour
     }
 
     private void SetMurderGame()
+{
+    // Choose the killer from the characters available for this game.
+    if (characters.Count == 0)
+        return;
+
+    _killerIndex = Random.Range(0, characters.Count);
+    _killer = characters[_killerIndex];
+
+    List<string> randomHints = new List<string>();
+    for (int i = 0; i < 4; ++i)
     {
-        _killerIndex = Random.Range(0, characters.Count);
-        _killer = characters[_killerIndex];
+        for (int j = 0; j < 3; ++j)
+            randomHints.Add(_killer.characterSo.traits[i]);
+    }
 
-        List<string> randomHints = new List<string>();
-        for (int i = 0; i < 4; ++i)
+    // Shuffle the hints.
+    for (int i = randomHints.Count - 1; i > 0; i--)
+    {
+        int j = Random.Range(0, i + 1);
+        (randomHints[i], randomHints[j]) = (randomHints[j], randomHints[i]);
+    }
+
+    AnswerTemplate killerAnswer = new AnswerTemplate();
+    int templateIndex = Random.Range(0, answerTemplates.Count);
+    killerAnswer.question = answerTemplates[templateIndex].question;
+
+    string killerHint = killerShit[Random.Range(0, killerShit.Count)];
+    killerAnswer.answer = answerTemplates[templateIndex].answer.Replace("$", killerHint);
+    killerAnswer.hint = killerHint;
+    _killer.answer = killerAnswer;
+
+    int hintIndex = 0;
+
+    // Assign location questions only to eligible characters at that location.
+    foreach (var question in answerTemplatesLoc)
+    {
+        List<Character> eligible = characters.FindAll(character =>
+            character != _killer &&
+            character.answer.question == "" &&
+            character.characterSo.located == question.info);
+
+        if (eligible.Count == 0)
+            continue;
+
+        Character chosen = eligible[Random.Range(0, eligible.Count)];
+        AnswerTemplate anst = new AnswerTemplate();
+        anst.question = question.question;
+        anst.answer = question.answer;
+        chosen.answer = MakeAnswer(anst, randomHints[hintIndex++]);
+    }
+
+    // Assign remaining questions only to characters still eligible.
+    foreach (var question in answerTemplates)
+    {
+        List<Character> eligible = characters.FindAll(character =>
+            character != _killer &&
+            character.answer.question == "");
+
+        if (eligible.Count == 0)
+            break;
+
+        Character chosen = eligible[Random.Range(0, eligible.Count)];
+        chosen.answer = MakeAnswer(question, randomHints[hintIndex++]);
+    }
+    
+    foreach (var character in characters)
+    {
+        if (character != _killer && character.answer.question == "")
         {
-            for (int j = 0; j < 2; ++j)
+            var question = answerTemplates[Random.Range(0, answerTemplates.Count)];
+
+            character.answer = new AnswerTemplate
             {
-                randomHints.Add(_killer.characterSo.traits[i]);
-            }
-        }
-
-        AnswerTemplate ats = new AnswerTemplate();
-        int killerIndexy = Random.Range(0, answerTemplates.Count);
-        ats.question = answerTemplates[killerIndexy].question;
-        string chosenKillerYo = killerShit[Random.Range(0, killerShit.Count)];
-        ats.answer = answerTemplates[killerIndexy].answer.Replace("$", chosenKillerYo);
-        ats.hint = chosenKillerYo;
-        characters[_killerIndex].answer = ats;
-        
-        for (int i = randomHints.Count - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1);
-            (randomHints[i], randomHints[j]) = (randomHints[j], randomHints[i]);
-        }
-
-        int indexy = 0;
-        foreach (var question in answerTemplatesLoc)
-        {
-            int rand = Random.Range(0, 3);
-            int startIndex = characters.FindIndex(character => character.characterSo.located == question.info);
-            while ((rand + startIndex) == _killerIndex || characters[rand + startIndex].answer.question != "")
-            {
-                rand = Random.Range(0, 3);
-            }
-
-            AnswerTemplate a = new AnswerTemplate();
-            a.question = question.question;
-            a.answer = question.answer.Replace("$", randomHints[indexy]);
-            a.hint = randomHints[indexy];
-            characters[rand + startIndex].answer = a;
-            indexy++;
-        }
-
-        indexy = 0;
-        foreach (var question in answerTemplates)
-        {
-            int rand = Random.Range(0, characters.Count);
-            while (rand == _killerIndex || characters[rand].answer.question != "")
-            {
-                rand = Random.Range(0, characters.Count);
-            }
-
-            AnswerTemplate a = new AnswerTemplate();
-            a.question = question.question;
-            a.answer = question.answer.Replace("$", randomHints[indexy]);
-            a.hint = randomHints[indexy];
-            characters[rand].answer = a;
-            indexy++;
+                question = question.question,
+                answer = "i dont know",
+                hint = ""
+            };
         }
     }
+
+}
+
+    public string GetKillerName()
+    {
+        return _killer.characterSo.characterName;
+    }
+
+private AnswerTemplate MakeAnswer(AnswerTemplate question, string hint)
+{
+    return new AnswerTemplate
+    {
+        question = question.question,
+        answer = question.answer.Replace("$", hint),
+        hint = hint
+    };
+}
+
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -151,6 +187,10 @@ public class GameManager : MonoBehaviour
         if (_timerToggle)
         {
             _timer -= Time.deltaTime; // check here if <0
+            if (_timer <= 0)
+            {
+                EndGame(false);
+            }
             if (_oldTimer > Mathf.Ceil(_timer))
             {
                 _oldTimer = Mathf.CeilToInt(_timer);
@@ -187,12 +227,18 @@ public class GameManager : MonoBehaviour
         CanvasManager.instance.ChangeTool(_currentTool);
     }
 
-    public void ExitTool()
+    public void ChangeToolDirect(int index)
+    {
+        _currentTool = index;
+        CanvasManager.instance.ChangeTool(_currentTool);
+    }
+
+    public void ExitTool(bool skipAsk)
     {
         switch (_currentTool)
         {
             case 0:
-                CanvasManager.instance.HideInterogate();
+                CanvasManager.instance.HideInterogate(skipAsk);
                 break;
             case 1:
                 CanvasManager.instance.HideInvestigate();
@@ -211,6 +257,18 @@ public class GameManager : MonoBehaviour
         }
 
         return _currentBuilding.buildingName;
+    }
+
+    public void EndGame(bool win)
+    {
+        if (win)
+        {
+            SceneManager.LoadScene("Win");
+        }
+        else
+        {
+            SceneManager.LoadScene("Lose");
+        }
     }
 
     public bool LocationSelected()

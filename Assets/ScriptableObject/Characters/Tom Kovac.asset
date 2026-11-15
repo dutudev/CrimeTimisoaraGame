@@ -18,5 +18,5 @@ MonoBehaviour:
   - dark hair
   - prominent eyebrows
   - crooked nose
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: db384d3d1d89ff2409c8c092682630f3, type: 3}
   located: {fileID: 11400000, guid: ffb00ac33a56115448a295e52774b00c, type: 2}

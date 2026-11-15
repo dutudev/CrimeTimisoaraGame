@@ -18,5 +18,5 @@ MonoBehaviour:
   - light hair
   - moustache
   - spectacles
-  characterSprite: {fileID: 0}
+  characterSprite: {fileID: 21300000, guid: 6ef269704d7004d4baf3fc057ec62bc0, type: 3}
   located: {fileID: 11400000, guid: f41d688b77a323f4da06308e521ab051, type: 2}

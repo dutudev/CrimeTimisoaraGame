@@ -31,13 +31,38 @@ public class BuildingInteractable : MonoBehaviour
         CameraMovement.instance.SetRotate(true);
         CameraMovement.instance.SnapPosition(new Vector2(transform.position.x, transform.position.z));
     }
-
+    
+    
     public void ChangeBuilding()
     {
         CameraMovement.instance.ChangeMove(false);
         CameraMovement.instance.SetRotate(true);
         CameraMovement.instance.SnapPosition(new Vector2(transform.position.x, transform.position.z));
         //GameManager.instance.DecreaseTimer(); CALCULATE HERE TIME between buildings
+        if (GameManager.instance.GetCurrentLocation() != null)
+        {
+            float dist = (buildingInfo.pos - GameManager.instance.GetCurrentLocation().pos).magnitude;
+            int time = Mathf.RoundToInt(30f * dist / 8.5f);
+            time = Mathf.RoundToInt(time / 30f) * 30;
+            GameManager.instance.DecreaseTimer(time);
+        }
+        GameManager.instance.SetCurrentBuilding(buildingInfo);
+        GameManager.instance.UseTool();
+    }
+
+    public void ChangeBuilding(bool calc)
+    {
+        CameraMovement.instance.ChangeMove(false);
+        CameraMovement.instance.SetRotate(true);
+        CameraMovement.instance.SnapPosition(new Vector2(transform.position.x, transform.position.z));
+        //GameManager.instance.DecreaseTimer(); CALCULATE HERE TIME between buildings
+        if (GameManager.instance.GetCurrentLocation() != null && calc)
+        {
+            float dist = (buildingInfo.pos - GameManager.instance.GetCurrentLocation().pos).magnitude;
+            int time = Mathf.RoundToInt(30f * dist / 8.5f);
+            time = Mathf.RoundToInt(time / 30f) * 30;
+            GameManager.instance.DecreaseTimer(time);
+        }
         GameManager.instance.SetCurrentBuilding(buildingInfo);
         GameManager.instance.UseTool();
     }

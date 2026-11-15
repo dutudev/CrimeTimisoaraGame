@@ -11,7 +11,7 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] 
     private GameObject warningObject, hintsPanel;
     [SerializeField] 
-    private TMP_Text timerText, locationText, hintsText;
+    private TMP_Text timerText, locationText, hintsText, warningText;
     [SerializeField]
     private CanvasGroup locationTextAlpha;
 
@@ -102,7 +102,9 @@ public class CanvasManager : MonoBehaviour
         warningObject.transform.localScale = Vector3.zero;
         warningObject.SetActive(true);
         _warningConfirm = callback;
-        
+        int mins = time / 60;
+        int secs = time % 60;
+        warningText.text = "This action will remove " + mins + " : " + secs.ToString("D2") + " from your time, you cannot come back without using time";
         LeanTween.cancel(warningObject);
         LeanTween.scale(warningObject, Vector3.one, 0.5f).setEaseOutExpo();
     }
@@ -233,9 +235,9 @@ public class CanvasManager : MonoBehaviour
         });
     }
 
-    public void HideInterogate()
+    public void HideInterogate(bool skipAsk)
     {
-        if (_currentlyAsking)
+        if (_currentlyAsking && !skipAsk)
         {
             _currentlyAsking = false;
             EndInterogate();
@@ -334,6 +336,19 @@ public class CanvasManager : MonoBehaviour
                 LeanTween.alphaCanvas(interogatePers1Alpha, 0f, 0.4f).setEaseOutExpo();
                 LeanTween.alphaCanvas(interogatePers2Alpha, 0f, 0.4f).setEaseOutExpo();
                 break;
+        }
+    }
+
+    public void Accuse(int index)
+    {
+        List<Character> characters = GameManager.instance.GetCharactersFromLocation(GameManager.instance.GetCurrentLocation());
+        if (characters[index].characterSo.characterName == GameManager.instance.GetKillerName())
+        {
+            GameManager.instance.EndGame(true);
+        }
+        else
+        {
+            GameManager.instance.EndGame(false);
         }
     }
 
