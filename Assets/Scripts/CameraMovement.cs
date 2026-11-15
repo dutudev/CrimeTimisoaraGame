@@ -96,8 +96,11 @@ public class CameraMovement : MonoBehaviour
     {
         if (ctx.performed)
         {
-            SetRotate(false);
-            ChangeMove(true);
+            if (!CanvasManager.instance.IsCurrentlyAsking())
+            {
+                SetRotate(false);
+                ChangeMove(true);  
+            }
             GameManager.instance.ExitTool();
         }
     }

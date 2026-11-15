@@ -17,3 +17,4 @@ MonoBehaviour:
   buildingDesctription: Soldiers work here, and weapons and military supplies are
     stored and maintained. People at the castle include soldiers, officers, guards,
     armourers, gunsmiths, and military clerks.
+  pos: {x: -48, y: 0.5}

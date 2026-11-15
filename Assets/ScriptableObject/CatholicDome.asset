@@ -17,3 +17,4 @@ MonoBehaviour:
   buildingDesctription: "People come here for church services, prayers, weddings,
     and funerals. The cathedral\u2019s visitors include priests, church attendants,
     choir members, and worshippers."
+  pos: {x: -5, y: -17.5}

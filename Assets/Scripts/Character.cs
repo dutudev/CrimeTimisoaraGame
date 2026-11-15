@@ -5,4 +5,5 @@ public class Character
 {
     public CharacterSO characterSo;
     public bool isKiller; // keep this?
+    public AnswerTemplate answer;
 }

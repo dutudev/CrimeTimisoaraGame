@@ -17,3 +17,4 @@ MonoBehaviour:
   buildingDesctription: "City officials meet here to manage civic business and keep
     public records. The building\u2019s workers and visitors include the mayor, clerks,
     archivists, messengers, and City Watch officers."
+  pos: {x: -21, y: 0}

@@ -16,3 +16,4 @@ MonoBehaviour:
   buildingSmallDesc: The wounded are never forgotten
   buildingDesctription: "Patients come here for treatment and care. The hospital\u2019s
     staff include doctors, pharmacists, nurses, attendants, and clerks."
+  pos: {x: -18, y: 12}

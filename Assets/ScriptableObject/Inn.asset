@@ -17,3 +17,4 @@ MonoBehaviour:
   buildingDesctription: "Travelers come here to eat, drink, sleep, and exchange news.
     The inn\u2019s guests and staff include the innkeeper, cooks, servers, stable
     workers, merchants, and travelers."
+  pos: {x: -14.5, y: -5.5}

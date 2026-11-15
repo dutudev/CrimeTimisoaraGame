@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8091e46f2bd537245857f6c95b68fa9c, type: 3}
+  m_Name: Leo Bell
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
+  characterName: Leo Bell
+  traits:
+  - short hair
+  - dark hair
+  - moustache
+  - mole on cheek
+  characterSprite: {fileID: 0}
+  located: {fileID: 11400000, guid: 9ed11d506ed19a6439479fb8124e75af, type: 2}

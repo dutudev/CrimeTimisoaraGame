@@ -7,5 +7,6 @@ public class BuildingInfo : ScriptableObject
     public string buildingSmallDesc;
     [TextArea(15,20)]
     public string buildingDesctription;
+    public Vector2 pos;
     //general info? vector of strings
 }

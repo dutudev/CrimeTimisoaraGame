@@ -19,7 +19,10 @@ public class BuildingInteractable : MonoBehaviour
 
     public void OnClick()
     {
-        CanvasManager.instance.ShowWarning(30, ChangeBuilding);
+        float dist = (buildingInfo.pos - GameManager.instance.GetCurrentLocation().pos).magnitude;
+        int time = Mathf.RoundToInt(30f * dist / 8.5f);
+        time = Mathf.RoundToInt(time / 30f) * 30;
+        CanvasManager.instance.ShowWarning(time, ChangeBuilding);
     }
 
     public void SnapToBuilding()
